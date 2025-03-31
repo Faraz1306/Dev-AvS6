@@ -2,13 +2,16 @@ Prérequis:
 - Docker installé sur votre machine.
 - Docker Compose
 
+
 Lancer la base de données:
 - docker-compose up -d
+
 
 Pour vérifier que le conteneur fonctionne, utilisez : docker ps
 
 
 Lorsque vous lancez votre application, Hibernate créera automatiquement les tables dans la base de données MasterAnnonce. 
+
 Votre application se connectera via l'URL jdbc:postgresql://localhost:5432/MasterAnnonce
 
 Arrêter la base de données:
