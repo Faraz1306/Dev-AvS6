@@ -11,8 +11,6 @@ services:
       - "5432:5432"
     volumes:
       - masterannonce_data:/var/lib/postgresql/data
-      # Optionnel : si vous souhaitez initialiser la BD avec un script SQL,
-      # décommentez la ligne suivante et placez un fichier init.sql dans la racine du projet.
       #- ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
