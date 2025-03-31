@@ -4,9 +4,10 @@ import com.example.dao.AnnonceDAO;
 import com.example.model.Annonce;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/AnnonceList")
@@ -20,7 +21,7 @@ public class AnnonceList extends HttpServlet {
             List<Annonce> annonces = annonceDAO.list();
             request.setAttribute("annonces", annonces);
             request.getRequestDispatcher("AnnonceList.jsp").forward(request, response);
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (Exception e) {
             throw new ServletException(e);
         }
     }

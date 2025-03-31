@@ -50,7 +50,7 @@
 
     <!-- Liens de navigation en bas de page -->
     <div class="text-center mt-4">
-        <a href="index.jsp" class="btn btn-link">Retour à l'accueil</a>
+        <a href="index.jsp" class="btn btn-link">Retour a l'accueil</a>
         <a href="AnnonceAdd" class="btn btn-link">Ajouter une annonce</a>
     </div>
 </div>

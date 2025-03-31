@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet("/AnnonceDelete")
 public class AnnonceDelete extends HttpServlet {
@@ -23,7 +22,7 @@ public class AnnonceDelete extends HttpServlet {
                 AnnonceDAO annonceDAO = new AnnonceDAO();
                 // Suppression de l'annonce correspondante
                 annonceDAO.delete(id);
-            } catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+            } catch (NumberFormatException e) {
                 throw new ServletException(e);
             }
         }

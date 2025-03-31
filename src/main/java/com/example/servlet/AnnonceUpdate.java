@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -31,7 +30,7 @@ public class AnnonceUpdate extends HttpServlet {
                     request.getRequestDispatcher("AnnonceUpdate.jsp").forward(request, response);
                     return;
                 }
-            } catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+            } catch (NumberFormatException e) {
                 throw new ServletException(e);
             }
         }
@@ -70,7 +69,7 @@ public class AnnonceUpdate extends HttpServlet {
                 request.setAttribute("error", "Erreur lors de la mise à jour de l'annonce.");
                 request.getRequestDispatcher("AnnonceUpdate.jsp").forward(request, response);
             }
-        } catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+        } catch (NumberFormatException e) {
             throw new ServletException(e);
         }
     }

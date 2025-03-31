@@ -1,95 +1,74 @@
 package com.example.dao;
 
 import com.example.model.Annonce;
-import java.sql.*;
-import java.util.ArrayList;
+import com.example.util.HibernateUtil;
 import java.util.List;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
-public class AnnonceDAO extends DAO<Annonce> {
+public class AnnonceDAO {
 
-    public AnnonceDAO() throws ClassNotFoundException {
-        super();
-    }
-
-    @Override
-    public boolean create(Annonce annonce) throws SQLException {
-        String sql = "INSERT INTO annonce (title, description, adress, mail, date) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, annonce.getTitle());
-        ps.setString(2, annonce.getDescription());
-        ps.setString(3, annonce.getAdress());
-        ps.setString(4, annonce.getMail());
-        ps.setTimestamp(5, annonce.getDate());
-        int result = ps.executeUpdate();
-        ps.close();
-        return result > 0;
-    }
-
-    @Override
-    public Annonce read(int id) throws SQLException {
-        String sql = "SELECT * FROM annonce WHERE id=?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        Annonce annonce = null;
-        if(rs.next()){
-            annonce = new Annonce(
-                    rs.getInt("id"),
-                    rs.getString("title"),
-                    rs.getString("description"),
-                    rs.getString("adress"),
-                    rs.getString("mail"),
-                    rs.getTimestamp("date")
-            );
+    public boolean create(Annonce annonce) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(annonce);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction != null)
+                transaction.rollback();
+            e.printStackTrace();
+            return false;
         }
-        rs.close();
-        ps.close();
-        return annonce;
     }
 
-    @Override
-    public boolean update(Annonce annonce) throws SQLException {
-        String sql = "UPDATE annonce SET title=?, description=?, adress=?, mail=?, date=? WHERE id=?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, annonce.getTitle());
-        ps.setString(2, annonce.getDescription());
-        ps.setString(3, annonce.getAdress());
-        ps.setString(4, annonce.getMail());
-        ps.setTimestamp(5, annonce.getDate());
-        ps.setInt(6, annonce.getId());
-        int result = ps.executeUpdate();
-        ps.close();
-        return result > 0;
-    }
-
-    @Override
-    public boolean delete(int id) throws SQLException {
-        String sql = "DELETE FROM annonce WHERE id=?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, id);
-        int result = ps.executeUpdate();
-        ps.close();
-        return result > 0;
-    }
-
-    public List<Annonce> list() throws SQLException {
-        List<Annonce> annonces = new ArrayList<>();
-        String sql = "SELECT * FROM annonce";
-        Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
-        while(rs.next()){
-            Annonce annonce = new Annonce(
-                    rs.getInt("id"),
-                    rs.getString("title"),
-                    rs.getString("description"),
-                    rs.getString("adress"),
-                    rs.getString("mail"),
-                    rs.getTimestamp("date")
-            );
-            annonces.add(annonce);
+    public Annonce read(int id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Annonce.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        rs.close();
-        stmt.close();
-        return annonces;
     }
+
+    public boolean update(Annonce annonce) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(annonce);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction != null)
+                transaction.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean delete(int id) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Annonce annonce = session.get(Annonce.class, id);
+            if (annonce != null) {
+                session.delete(annonce);
+                transaction.commit();
+                return true;
+            }
+        } catch (Exception e) {
+            if (transaction != null)
+                transaction.rollback();
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<Annonce> list() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Annonce", Annonce.class).list();
+        }
+    }
+
 }

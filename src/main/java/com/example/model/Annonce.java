@@ -1,13 +1,22 @@
 package com.example.model;
 
 import java.sql.Timestamp;
+import javax.persistence.*;
 
+@Entity(name="Annonce")
+@Table(name = "annonce")
 public class Annonce {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String title;
     private String description;
     private String adress;
     private String mail;
+
+    @Column(name = "date")
     private Timestamp date;
 
     public Annonce() {}
@@ -21,7 +30,7 @@ public class Annonce {
         this.date = date;
     }
 
-    // Constructeur complet (avec id)
+    // Constructeur complet
     public Annonce(int id, String title, String description, String adress, String mail, Timestamp date) {
         this.id = id;
         this.title = title;

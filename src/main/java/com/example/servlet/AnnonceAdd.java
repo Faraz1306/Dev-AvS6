@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -16,20 +15,20 @@ public class AnnonceAdd extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Affiche le formulaire de saisie d'annonce
+        // Afficher le formulaire de saisie d'annonce
         request.getRequestDispatcher("AnnonceAdd.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Récupérer les paramètres du formulaire
+        // Récupération des paramètres du formulaire
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         String adress = request.getParameter("adress");
         String mail = request.getParameter("mail");
 
-        // Validation : tous les champs doivent être remplis
+        // Validation simple : tous les champs sont obligatoires
         if(title == null || title.trim().isEmpty() ||
                 description == null || description.trim().isEmpty() ||
                 adress == null || adress.trim().isEmpty() ||
@@ -42,16 +41,17 @@ public class AnnonceAdd extends HttpServlet {
         // Création de l'objet Annonce avec la date courante
         Annonce annonce = new Annonce(title, description, adress, mail, new Timestamp(new Date().getTime()));
         try {
+            // Utilisation du DAO basé sur Hibernate
             AnnonceDAO annonceDAO = new AnnonceDAO();
             boolean success = annonceDAO.create(annonce);
             if(success){
-                // Rediriger vers la liste des annonces
+                // Redirige vers la liste des annonces en cas de succès
                 response.sendRedirect("AnnonceList");
             } else {
                 request.setAttribute("error", "Erreur lors de l'ajout de l'annonce.");
                 request.getRequestDispatcher("AnnonceAdd.jsp").forward(request, response);
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (Exception e) {
             throw new ServletException(e);
         }
     }
