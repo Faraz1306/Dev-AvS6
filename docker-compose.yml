@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    container_name: masterannonce-db
+    environment:
+      POSTGRES_DB: MasterAnnonce
+      POSTGRES_USER: fsiddiqui
+      POSTGRES_PASSWORD: 2002
+    ports:
+      - "5432:5432"
+    volumes:
+      - masterannonce_data:/var/lib/postgresql/data
+      # Optionnel : si vous souhaitez initialiser la BD avec un script SQL,
+      # décommentez la ligne suivante et placez un fichier init.sql dans la racine du projet.
+      #- ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  masterannonce_data:
